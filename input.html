@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" media="all" href="https://guppy.js.org/build/guppy-default.min.css" />
+  <script src="https://guppy.js.org//build/guppy.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="editor.js"></script>
+</head>
+
+<body>
+  <div class="col-md-12">
+
+    <div class="row">
+
+      <div class="col-md-2">
+        <h3>F = </h3>
+      </div>
+      <div class="col-md-10" id="guppy1"></div>
+    </div>
+    <div class="row">
+      <button id="btn-compute" type="button" style="width:100%" class="btn btn-primary">Compute Function</button>
+    </div>
+    <div class="panel-group" id="accordion">
+    </div>
+</body>
+
+<script>
+  var editor = null;
+  $(document).ready(function () {
+    editor = new Guppy("guppy1");
+    console.log(editor);
+    editor.event("done", updateVariables);
+  });
+
+  function updateVariables(o, n) {
+    let variables = Guppy("guppy1").vars();
+    variables.forEach(element => {
+      if ($("#panel" + element).length == 0) {
+        console.log("Appended", element);
+        let t = tmpl.replace(/%ID%/g, element);
+        $("#accordion").append(t);
+      }
+    });
+
+  }
+
+  function getFunctionDefinition() {
+    var result = {};
+    result.func = Guppy("guppy1").doc().get_content("text");
+    result.vars = [];
+    let variables = Guppy("guppy1").vars();
+    variables.forEach(element => {
+      result.vars.push({
+        "variable": element,
+        "description": $("#variableInfo" + element).val(),
+        "domainMin": $("#inputMinValue" + element).val(),
+        "domainMax": $("#inputMaxValue" + element).val(),
+      })
+    });
+    return result;
+  }
+  
+  $("#btn-compute").on("click", function () {
+    console.log(getFunctionDefinition());
+  });
+
+  var tmpl = `<div id="panel%ID%" class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#collapse%ID%">%ID%</a>
+      </h4>
+    </div>
+    <div id="collapse%ID%" class="panel-collapse collapse in">
+        <label for="variableInfo%ID%">Variable Info</label>
+        <input type="text" class="form-control" id="variableInfo%ID%" placeholder="Description"></input>
+        <div class="input-group">
+          <label for="inputMinValue%ID%">Domain Min</label>
+          <input id="inputMinValue%ID%" type="number" step="any" class="form-control"></input>
+        </div>
+        <div class="input-group">
+          <label for="inputMaxValue%ID%">Domain Max</label>
+          <input id="inputMaxValue%ID%" type="number" step="any" class="form-control"></input>
+        </div>
+    </div>
+  </div>
+  `
+</script>
+
+</html>
