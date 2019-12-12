@@ -1,2 +1,7 @@
 # math2numpy
- A Simple Function Editor based on Guppy which converts function into numpy expressions
+This is a very simple function editor for usage in a webapp environment. 
+
+# Requirements
+Only numpy is required
+
+``pip install numpy``
