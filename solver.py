@@ -1,3 +1,8 @@
+"""
+
+
+"""
+
 import numpy as np
 
 expressions = {
@@ -33,11 +38,15 @@ def eval_expression(exp, variables):
     return eval("func")
 
 
-var = [
-    dict(name="x", info="Length", param_range=(0,100)),
-    dict(name="t", info="time", param_range=(0, 1.0))
-]
+if __name__ == '__main__':
 
-exp = "sin(x) * 12 * cos(t)"
-f = eval_expression(exp, var)
-print(f([10,20]))
+    # Example usage
+
+    var = [
+        dict(name="x", info="Length", param_range=(0,100)),
+        dict(name="t", info="time", param_range=(0, 1.0))
+    ]
+
+    exp = "sin(x) * 12 * cos(t)"
+    f = eval_expression(exp, var)
+    print(f([10,20]))
